@@ -67,31 +67,21 @@ public class Main : MonoBehaviour {
 
 	float sw = Screen.width;
 	float sh = Screen.height;
-	float tw = Screen.width/6f;//100f;//Screen.width/4f;
-	float th = Screen.height/15f;//20f;//Screen.height/8f;
+	float tw = Screen.width/6f;
+	float th = Screen.height/15f;
 	string ServerNameFieldText = "";
+	string ServerPasswordFieldText = "";
 
 	#endregion
 
 	void OnGUI(){
-		/*if(SettingMasterServer){
-			GUI.Label(new Rect(sw*0.5f - tw*0.75f, sh*0.5f - th*1.5f, tw*2, th), "Enter Master Server IP:");
-			MasterServerIPString = GUI.TextField(new Rect(sw*0.5f - tw*0.75f, sh*0.5f - th*0.5f, tw*1.5f, th), MasterServerIPString, 32);
-
-			if(GUI.Button(new Rect(new Rect(sw*0.5f - tw*0.5f, sh*0.5f + th*0.5f, tw*1f, th)), "Continue")){
-				MasterServer.ipAddress = MasterServerIPString;
-				MasterServer.port = 23466;//int.Parse(MasterServerPortString);
-				Network.natFacilitatorIP = MasterServerIPString;
-				Network.natFacilitatorPort = 50005;
-				NamingServer = true;
-				SettingMasterServer = false;
-			}
-		}else*/
 		if(NamingServer){
-			GUI.Label(new Rect(sw*0.5f - tw*0.75f, sh*0.5f - th*1.5f, tw*2, th), "Enter Server Name:");
-			ServerNameFieldText = GUI.TextField(new Rect(sw*0.5f - tw*0.75f, sh*0.5f - th*0.5f, tw*1.5f, th), ServerNameFieldText, 32);
-			if(GUI.Button(new Rect(sw*0.5f - tw*0.5f, sh*0.5f + th*0.75f, tw, th), "Start Server")){
-				InitServer(ServerNameFieldText);
+			GUI.Label(new Rect(sw*0.5f - tw*0.75f, sh*0.5f - th*2f, tw*2, th), "Enter Server Name:");
+			ServerNameFieldText = GUI.TextField(new Rect(sw*0.5f - tw*0.75f, sh*0.5f - th*1f, tw*1.5f, th), ServerNameFieldText, 32);
+			GUI.Label(new Rect(sw*0.5f - tw*0.75f, sh*0.5f + th*0.25f, tw*2, th), "Enter Server Password:");
+			ServerPasswordFieldText = GUI.TextField(new Rect(sw*0.5f - tw*0.75f, sh*0.5f + th*1.25f, tw*1.5f, th), ServerPasswordFieldText, 32);
+			if(GUI.Button(new Rect(sw*0.5f - tw*0.5f, sh*0.5f + th*2.5f, tw, th), "Start Server")){
+				InitServer(ServerNameFieldText, ServerPasswordFieldText);
 				NamingServer = false;
 			}
 		}else{
@@ -130,7 +120,8 @@ public class Main : MonoBehaviour {
 		ShowFailedMasterServerConnect = true;
 	}
 	
-	private void InitServer(string RoomName){
+	private void InitServer(string RoomName, string ServerPassword){
+		Network.incomingPassword = ServerPassword;
 		NetworkConnectionError e = Network.InitializeServer (20, Port, !Network.HavePublicAddress());
 		MasterServer.RegisterHost(TypeName,RoomName);
 		Debug.Log("Multiplayer Server return: " + e);
